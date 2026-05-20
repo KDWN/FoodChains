@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="./style.css">
+        <script type="module" src="./index.js"></script>
+    </head>
+<body>
+    <template id="tempGasm">
+        <div class="organBox">
+            <section class="organism">
+                <div class = "nameBox">
+                    <input type="text" class="name" placeholder="Organism:" required>
+                    <button class="removeOrganism" type="button">
+                        <div class="minusOrganism"></div>
+                    </button>
+                </div>
+                <div class="foodItem">
+                    <input type="text" class="foodName" placeholder="Consumes:">
+                    <button class="removeFood" type="button">
+                        <div class="minusFood"></div>
+                    </button>
+                </div>
+            </section>
+            <button class="addFood" type="button">
+                <div class="plusFood"></div>
+            </button>
+        </div>
+    </template>
+
+    <template id="tempFood">
+        <div class="foodItem">
+            <input type="text" class="foodName" placeholder="Consumes:">
+            <button class="removeFood" type="button">
+                <div class="minusFood"></div>
+            </button>
+        </div>
+    </template>
+
+    <form id = "ecosystem">
+        <div class="organBox">
+            <section class="organism">
+                <div class = "nameBox">
+                    <input type="text" class="name" placeholder="Organism:" required>
+                    <button class="removeOrganism" type="button">
+                        <div class="minusOrganism"></div>
+                    </button>
+                </div>
+                <div class="foodItem">
+                    <input type="text" class="foodName" placeholder="Consumes:">
+                    <button class="removeFood" type="button">
+                        <div class="minusFood"></div>
+                    </button>
+                </div>
+            </section>
+            <button class="addFood" type="button">
+                <div class="plusFood"></div>
+            </button>
+        </div>
+    <button type="submit" id="submit">Save Ecosystem</button>
+    </form>
+    <button id="addOrganism" type="button">
+        <div id="plusOrganism"></div>
+        <label>Add Organism</label>
+    </button>
+</body>
+</html>
