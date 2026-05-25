@@ -51,7 +51,7 @@ function saveEcosystem() {
         })
     })
     console.log(ecosystem)
-    fetch('http://localhost:3000/saveEcosystem', {
+    fetch('http://localhost:3000/ecosystems/saveEcosystem', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ function saveEcosystem() {
         }
         return response.json();
     })
-    .then(response => response.json())
+    .then(response => response)
     .then(data => {
         console.log('Server response:', data)
     })

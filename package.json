@@ -2,9 +2,10 @@
   "name": "foodchains",
   "version": "1.0.0",
   "description": "HOLD STRONG",
-  "main": "src/app.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/app.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
   },
   "keywords": [],
   "author": "",

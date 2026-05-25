@@ -1,6 +1,6 @@
-import express from "express";
-import { saveEcosystem } from "../controllers/ecosystemController";
+import express from "express"
+import { saveEcosystem } from "../controllers/ecosystemController.js"
 
-export const router = express.Router()
+export const ecosystemRouter = express.Router()
 
-router.post('/saveEcosystem', saveEcosystem);
+ecosystemRouter.post('/saveEcosystem', saveEcosystem);
