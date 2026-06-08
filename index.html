@@ -12,15 +12,9 @@
         <div class="organBox">
             <section class="organism">
                 <div class = "nameBox">
-                    <input type="text" class="name" placeholder="Organism:" required>
+                    <input type="text" name="organismName" class="name" placeholder="Organism:" required>
                     <button class="removeOrganism" type="button">
                         <div class="minusOrganism"></div>
-                    </button>
-                </div>
-                <div class="foodItem">
-                    <input type="text" class="foodName" placeholder="Consumes:">
-                    <button class="removeFood" type="button">
-                        <div class="minusFood"></div>
                     </button>
                 </div>
             </section>
@@ -32,7 +26,7 @@
 
     <template id="tempFood">
         <div class="foodItem">
-            <input type="text" class="foodName" placeholder="Consumes:">
+            <input type="text" list="consumableList" name="foodName" class="foodName" placeholder="Eats:">
             <button class="removeFood" type="button">
                 <div class="minusFood"></div>
             </button>
@@ -40,30 +34,15 @@
     </template>
 
     <form id = "ecosystem">
-        <div class="organBox">
-            <section class="organism">
-                <div class = "nameBox">
-                    <input type="text" class="name" placeholder="Organism:" required>
-                    <button class="removeOrganism" type="button">
-                        <div class="minusOrganism"></div>
-                    </button>
-                </div>
-                <div class="foodItem">
-                    <input type="text" class="foodName" placeholder="Consumes:">
-                    <button class="removeFood" type="button">
-                        <div class="minusFood"></div>
-                    </button>
-                </div>
-            </section>
-            <button class="addFood" type="button">
-                <div class="plusFood"></div>
-            </button>
-        </div>
-    <button type="submit" id="submit">Save Ecosystem</button>
+        <input type="text" list="consumableList">
+        <datalist id = "consumableList">
+        </datalist>
     </form>
+    <button type="submit" id="submit" form="ecosystem">Save Ecosystem</button>
     <button id="addOrganism" type="button">
         <div id="plusOrganism"></div>
         <label>Add Organism</label>
     </button>
+    <button id="test" type="button">test</button>
 </body>
 </html>

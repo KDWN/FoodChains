@@ -29,13 +29,3 @@ export const cleanup = async (driver) => {
     console.log('Driver closed')
     process.exit(0);
 }
-
-export const startSession = async () => {
-    const session = await driver.session({ database: NEO4J_DB })
-    return session
-}
-
-export const closeSession = async (session) => {
-    await session.close()
-    console.log('Session closed')
-}
