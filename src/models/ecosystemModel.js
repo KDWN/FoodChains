@@ -1,19 +1,53 @@
 import neo4j, { Relationship } from 'neo4j-driver'
 import { driver } from "../config/db.js"
 
+class Organism {
+    constructor(id, name, foodList) {
+        this.id = id;
+        this.name = name;
+        if (foodList) {
+            this.foodList = foodList;
+        } else {
+            this.foodList = [];
+        }
+    }
+
+    addFood(foodId) {
+        this.foodList.push(foodId);
+    }
+
+    removeFood(foodId) {
+        this.foodList = this.foodList.filter(id => id !== foodId);
+    }
+
+    rename(newName) {
+        this.name = newName;
+    }
+}
+
 export const createEcosystem = async (ecosystem) => {
     const session = driver.session()
     try {
         await session.executeWrite(async tx => {
-        for (const [organism, foodList] of Object.entries(ecosystem)) {
+        for (const [organismId, organismInfo] of ecosystem) {
+            const foodList = organismInfo["foodList"]
+            const organismName = organismInfo["name"]
+            if ( !organismName ) break
+            await tx.run(`
+                MERGE(o:Organism {id: $organismId})
+                SET o.name = $organismName
+                `,
+                {organismId, organismName}
+            )
             for (const food of foodList) {
                 await tx.run(`
-                    MERGE(o:Organism {name: $organism})
-                    MERGE(f:Organism {name: $food})
+                    Match(o:Organism {id: $organismId})
+                    MERGE(f:Organism {id: $food})
                     MERGE(o)-[:EATS]->(f)
                 `,
-                {organism, food}
+                {organismId, food}
                 )
+                console.log(food)
             }
         }
         })
@@ -26,22 +60,31 @@ export const checkEcosystem = async () => {
     let result = []
     const session = driver.session()
     try {
-        await session.executeWrite(async tx => {
+        await session.executeRead(async tx => {
             result = await tx.run(`
                 MATCH e=(o)-[r]->(f)
                 RETURN e AS ecosystem
             `)
         })
     } finally {
-        const ecosystem = {}
+        const ecosystem = new Map()
         for (const link of result.records) {
-            const consumer = link.get('ecosystem').start.properties.name;
-            const food = link.get('ecosystem').end.properties.name;
-            if (!ecosystem.hasOwnProperty(consumer)) {
-                ecosystem[consumer]=[];
+            const consumerId = link.get('ecosystem').start.properties.id;
+            const consumerName = link.get('ecosystem').start.properties.name;
+            const foodId = link.get('ecosystem').end.properties.id;
+            const foodName = link.get('ecosystem').end.properties.name;
+            if (!ecosystem.has(consumerId)) {
+                const consumer = new Organism(consumerId, consumerName);
+                ecosystem.set(consumerId, consumer);
+            } else {
+                ecosystem.get(consumerId).rename(consumerName);
             }
-            if (food != undefined) {
-                ecosystem[consumer].push(food);
+            if (!ecosystem.has(foodId)) {
+                const food = new Organism(foodId, foodName);
+                ecosystem.set(foodId, food);
+            }
+            if (foodId) {
+                ecosystem.get(consumerId).addFood(foodId);
             }
         }
         session.close()

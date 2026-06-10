@@ -53,7 +53,6 @@ function validateConsumable() {
     if (!this.value) {
         return;
     }
-    console.log(this.value.toLowerCase())
     if (!existingOrganisms.includes(this.value.toLowerCase())) {
         this.value = '';
         return;
@@ -104,7 +103,7 @@ function updateDropdown(uuid, nameInput, organismName) {
     if ( organismName === null ) {
         consumableOption.remove();
         document.querySelectorAll(`input[data-id="${uuid}"]`).forEach((timeEaten) => {
-            timeEaten.value = '';
+            timeEaten.parentNode.remove();
         })
         return
     }
@@ -120,7 +119,7 @@ function updateDropdown(uuid, nameInput, organismName) {
     consumableOption.value = organismName;
     document.querySelectorAll(`input[data-id="${uuid}"]`).forEach((timeEaten) => {
         timeEaten.value = organismName;
-    })
+    });
 }
 
 function isOverflowing(element) {
@@ -132,9 +131,29 @@ function removeConsumable() {
     const thisInput = thisFood.children[0]
     const thisId = thisInput.dataset.id
     const thisOrganism = this.closest(".organBox")
-    const consumerId = thisOrganism.dataset.id
-    ecosystem.get(consumerId).removeFood(thisId)
+    const organismId = thisOrganism.dataset.id
+    ecosystem.get(organismId).removeFood(thisId)
     thisFood.remove();
+    fetch('http://localhost:3000/food/removeFood', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({organismId, thisId})
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error(`Server error: ${response.status} , ${response.statusText}`)
+        }
+        return response.json();
+    })
+    .then(response => response)
+    .then(data => {
+        console.log('Server response:', data)
+    })
+    .catch(err => {
+        console.error(err);
+    });
 }
 
 function removeOrganism() {
@@ -146,7 +165,6 @@ function removeOrganism() {
     updateDropdown(organismId, nameinput, null)
     ecosystem.delete(organismId);
     thisOrganism.remove();
-
     fetch('http://localhost:3000/organisms/removeOrganism', {
         method: 'POST',
         headers: {
@@ -170,25 +188,13 @@ function removeOrganism() {
 }
 
 function saveEcosystem() {
-    const container = document.querySelector('#ecosystem');
-    container.querySelectorAll('.organism').forEach((organism) => {
-        const id = crypto.randomUUID();
-        const organismName = organism.querySelector('.name').value.toLowerCase();
-        ecosystem[id] = {};
-        organism.querySelectorAll('.foodItem').forEach((foodItem) => {
-            const foodName = foodItem.querySelector('.foodName').value.toLowerCase();
-            if ( foodName.length > 0 ) {
-                ecosystem[organismName].push(foodName);
-            }
-        })
-    })
     console.log(ecosystem)
     fetch('http://localhost:3000/ecosystems/saveEcosystem', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ ecosystem })
+        body: JSON.stringify(ecosystem, replacer)
     })
     .then(response => {
         if(!response.ok){
@@ -198,7 +204,7 @@ function saveEcosystem() {
     })
     .then(response => response)
     .then(data => {
-        console.log('Server response:', data)
+        console.log('Server response:', JSON.parse(data, reviver))
     })
     .catch(err => {
         console.error(err);
@@ -220,11 +226,10 @@ function checkDB() {
     })
     .then(response => response)
     .then(data => {
-        if (Object.keys(data).length < 1) {
+        if (JSON.parse(data, reviver).size < 1) {
             return false
         }
-        console.log('Server response:', data);  
-        displayEcosystem(data);
+        displayEcosystem(JSON.parse(data, reviver));
         return true
     })
     .catch(err => {
@@ -233,31 +238,72 @@ function checkDB() {
 }
 
 async function displayEcosystem(data){
-    ecosystem = data
-    for (const [organism, foodList] of Object.entries(ecosystem)) {
-        await createOrganism(organism, foodList);
+    for ( const [organismId, organismInfo] of data ) {
+        ecosystem.set(organismId, new Organism(organismId, organismInfo['name'], organismInfo['foodList']))
+    }
+    console.log(ecosystem);
+    for (const [organismId, organismInfo] of ecosystem) {
+        console.log('orgId', organismId)
+        const organismName = organismInfo['name'];
+        const foodList = organismInfo['foodList'];
+        await createOrganism(organismId, organismName, foodList);
     }
 }
 
-async function createOrganism(organism, foodList) {
-    await addOrganism()
+async function createOrganism(organismId, organismName, foodList) {
+    await addOrganism(organismId)
     const thisEcosystem = document.querySelector("#ecosystem");
     const newOrganism = thisEcosystem.lastElementChild;
     const nameBox = newOrganism.children[0].children[0].children[0];
     const button = newOrganism.children[1];
-    nameBox.value = organism;
-    for ( const food of foodList ) {
+    newOrganism.dataset.id = organismId;
+    nameBox.value = organismName;
+    for ( const foodId of foodList ) {
         await addConsumable(button)
+        const foodName = ecosystem.get(foodId)['name'];
         const foodBox = newOrganism.children[0].lastElementChild.children[0];
-        foodBox.value = food;
+        foodBox.dataset.id = foodId;
+        foodBox.value = foodName;
     }
-    console.log(organism);
+
+    const organismSelector = document.createElement("option");
+    organismSelector.dataset.id = organismId;
+    organismSelector.value = organismName;
+    const consumableList = thisEcosystem.querySelector("#consumableList");
+    consumableList.appendChild(organismSelector);
+
+
+    console.log(organismId);
     console.log(foodList);
+}
+
+function replacer(key, value) {
+  if(value instanceof Map) {
+    return {
+      dataType: 'Map',
+      map: Object.fromEntries(value),
+    };
+  } else {
+    return value;
+  }
+}
+
+function reviver(key, value) {
+  if (value && typeof value === 'object' && value.dataType === 'Map') {
+    return new Map(Object.entries(value.map));
+  }
+  return value;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("page loaded");
-    document.querySelector("#test").addEventListener("click", () => {console.log(Object.fromEntries(ecosystem))})
+    document.querySelector("#test").addEventListener("click", () => {
+        const testInput = JSON.stringify(ecosystem, replacer)
+        const testOutput = JSON.parse(testInput, reviver)
+        console.log(testOutput);
+        console.log(Object.fromEntries(ecosystem));
+        console.log(Object.fromEntries(ecosystem) === Object.fromEntries(testOutput))
+    });
     document.querySelector("#ecosystem").addEventListener("submit", (e) => {
         e.preventDefault()
         saveEcosystem()

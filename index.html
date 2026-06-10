@@ -33,16 +33,18 @@
         </div>
     </template>
 
-    <form id = "ecosystem">
-        <input type="text" list="consumableList">
-        <datalist id = "consumableList">
-        </datalist>
-    </form>
-    <button type="submit" id="submit" form="ecosystem">Save Ecosystem</button>
-    <button id="addOrganism" type="button">
-        <div id="plusOrganism"></div>
-        <label>Add Organism</label>
-    </button>
-    <button id="test" type="button">test</button>
+    <section id="organismRow">
+        <form id="ecosystem">
+            <datalist id = "consumableList">
+            </datalist>
+        </form>
+        <div id="organismButtons">
+            <button id="addOrganism" type="button">
+                <label>Add <br> Organism</label>
+                <div id="plusOrganism"></div>
+            </button>
+            <button type="submit" id="submit" form="ecosystem">Save Ecosystem</button>
+        </div>
+    </section>
 </body>
 </html>

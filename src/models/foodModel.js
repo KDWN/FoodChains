@@ -10,7 +10,7 @@ export const checkFoodConnections = async (foodList) => {
             for(const food of foodList) {
                 console.log(food)
                 const deletedFood = await tx.run(`
-                    MATCH(o:Organism {name: $food})
+                    MATCH(o:Organism {id: $food})
                     WHERE NOT (o)--()
                     WITH o, o.name AS deletedName
                     DELETE o
@@ -26,5 +26,21 @@ export const checkFoodConnections = async (foodList) => {
     } finally {
         session.close()
         console.log(`${JSON.stringify(removedFood)} have been removed due to 0 links`)
+    }
+}
+
+export const deleteConnection = async (organismId, foodId) => {
+    const session = driver.session()
+    try {
+        await session.executeWrite(async tx => {
+            const deletedFood = await tx.run(`
+                MATCH(o:Organism {id: $organismId})-[r:EATS]->(f:Organism {id: $foodId})
+                DELETE r
+            `,
+            {organismId, foodId}
+            )
+        })
+    } finally {
+        session.close()
     }
 }
