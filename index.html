@@ -4,8 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-        <link rel="stylesheet" href="./style.css">
-        <script type="module" src="./index.js"></script>
+        <link rel="stylesheet" href="./global.css">
+        <link rel="stylesheet" href="./organismRow.css">
+        <link rel="stylesheet" href="./foodChainRow.css">
+        <script type="module" src="./global.js"></script>
+        <script type="module" src="./organismRow.js"></script>
+        <script type="module" src="./foodchainRow.js"></script>
     </head>
 <body>
     <template id="tempGasm">
@@ -39,11 +43,19 @@
             </datalist>
         </form>
         <div id="organismButtons">
-            <button id="addOrganism" type="button">
+            <button id="addOrganism" type="button" disabled>
                 <label>Add <br> Organism</label>
                 <div id="plusOrganism"></div>
             </button>
-            <button type="submit" id="submit" form="ecosystem">Save Ecosystem</button>
+            <button type="submit" id="submit" form="ecosystem" disabled>Save Ecosystem</button>
+        </div>
+    </section>
+    <section id="foodChainRow">
+        <button type="button" id="displayFoodChains" disabled>Display Food Chains</button>
+        <div id="foodChainContainer">
+            <div id="foodChainDisplay">
+
+            </div>
         </div>
     </section>
 </body>

@@ -1,19 +1,8 @@
-body {
-  padding: 0;
-  margin: 0;
-  background-color: #C3FBF4;
-}
-
 #organismRow {
   display: flex;
   flex-direction: row;
   width: 100%;
-}
-
-#organismButtons {
-  display: flex;
-  flex-direction: column;
-  margin: 1vh 1vw 0 1vw;
+  margin-bottom: auto;
 }
 
 #ecosystem {
@@ -34,6 +23,12 @@ body {
   max-height: max-content;
   border: 3px solid rgb(76, 90, 69);
   border-radius: 20px;
+}
+
+#organismButtons {
+  display: flex;
+  flex-direction: column;
+  margin: 1vh 1vw 0 1vw;
 }
 
 .organBox {
@@ -288,5 +283,5 @@ body {
   cursor: pointer;
   border: 3px solid rgb(76, 90, 69);
   border-radius: 20px;
-  margin-top: auto;
+  margin-top: 2vh;
 }
