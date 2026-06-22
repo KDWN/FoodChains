@@ -1,4 +1,4 @@
-export const validCharacters = /[a-z][A-Z]/g;
+export const validCharacters = /[a-z]/gi;
 
 export const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

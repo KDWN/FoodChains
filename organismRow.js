@@ -142,8 +142,14 @@ function updateDropdown(uuid, nameInput, organismName) {
     if ( organismName === null ) {
         consumableOption.remove();
         document.querySelectorAll(`input[data-id="${uuid}"]`).forEach((timeEaten) => {
+            const consumerId = timeEaten.closest(".organBox").dataset.id
+            ecosystem.get(consumerId).removeFood(uuid);
             timeEaten.parentNode.remove();
         })
+        return
+    }
+    if ( organismName.length > 250 ) {
+        nameInput.value = ""
         return
     }
     const existingOrganisms = []
@@ -216,7 +222,7 @@ function removeOrganism() {
     const jsOrganism = ecosystem.get(organismId);
     const foodList = jsOrganism["foodList"];
     const nameinput = this.parentNode.children[0];
-    updateDropdown(organismId, nameinput, null)
+    updateDropdown(organismId, nameinput, null);
     ecosystem.delete(organismId);
     thisOrganism.remove();
     fetch('http://localhost:3000/organisms/removeOrganism', {
@@ -234,7 +240,7 @@ function removeOrganism() {
     })
     .then(response => response)
     .then(data => {
-        console.log('Server response:', data)
+        console.log('Server response:', data);
     })
     .catch(err => {
         console.error(err);
@@ -247,8 +253,12 @@ function removeConsumable() {
     const thisId = thisInput.dataset.id
     const thisOrganism = this.closest(".organBox")
     const organismId = thisOrganism.dataset.id
+    const organism = this.closest(".organism")
     ecosystem.get(organismId).removeFood(thisId)
     thisFood.remove();
+    if(isOverflowing(organism) === false) {
+        organism.style.paddingRight = "1.5rem";
+    }
     if(!thisId) { return }
     fetch('http://localhost:3000/food/removeFood', {
         method: 'POST',
@@ -275,13 +285,12 @@ function removeConsumable() {
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("page loaded");
     document.querySelector("#ecosystem").addEventListener("submit", (e) => {
-        e.preventDefault()
-        saveEcosystem()
+        e.preventDefault();
+        saveEcosystem();
     })
     document.querySelector("#addOrganism").addEventListener("click", addOrganism);
     if (! await checkDB()) {
-        addOrganism()
-        return
+        addOrganism();
     }
     document.querySelector("#addOrganism").disabled = false;
     document.querySelector("#submit").disabled = false;

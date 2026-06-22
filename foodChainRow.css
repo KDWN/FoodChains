@@ -5,13 +5,44 @@
     margin-top: auto;
 }
 
-#displayFoodChains {
-    margin: 0 0 1vmin 1vmin;
+#foodChainControllers {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: calc(20% - 3vw);
+    margin: 0 0 1vh 0.5vw;
+    height: 38vh;
+    background-color: var(--gray);
     border-radius: 20px;
-    height: 15vmin;
-    width: 15vmin;
+    overflow: hidden;
+    padding: 1vh 0.5vw 1vh 0.5vw;
+}
+
+#filters {
+    display: flex;
+    flex-direction: column;
+}
+
+#filters label {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-top: 0.7rem;
+}
+
+#filters input {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+#displayFoodChains {
+    height: 10vh;
+    width: calc(100% - 1vw);
+    background-color: rgba(128, 128, 128, 0.132);
     font-size: 2rem;
     font-weight: bold;
+    border: 2px solid #8b8b8b;
+    border-radius: 20px;
 }
 
 #foodChainContainer {
@@ -21,17 +52,16 @@
     transform: scale(-1, -1);
     display: inline;
     width: 80%;
-    height: 30vh;
-    max-width: 98.3vw;
-    max-height: 97.6vh;
-    background-color: rgb(205, 247, 183);
-    border: 3px solid rgb(76, 90, 69);
+    height: 40vh;
+    max-width: calc(98.5vw + 2px);
+    max-height: calc(98vh + 2px);
+    background-color: var(--green);
     border-radius: 20px 20px 0px 20px;
     overflow: hidden;
-    margin: 0 1vw 1vmin 0;
+    margin: 0 calc(1vw - 2px) 1vh 0;
     visibility: hidden;
     resize: both;
-    z-index: 9999;
+    z-index: 10;
 }
 
 #foodChainDisplay {
@@ -47,7 +77,7 @@
 }
 
 #foodChainDisplay > p {
-    font-size: 1.5rem;
+    font-size: 2rem;
     flex-grow: 0;
     flex-shrink: 0;
     text-wrap: nowrap;

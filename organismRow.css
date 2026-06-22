@@ -5,15 +5,21 @@
   margin-bottom: auto;
 }
 
+#ecosystemContainer { 
+  min-width: 80%;
+  padding: 1vh 1vw 1vh 1vw;
+  transform: scaleY(-1);
+  overflow-x: auto;
+  margin-right: auto;
+}
+
 #ecosystem {
   display: flex;
   justify-content: left;
   gap: 2.5vw;
   width: min-content;
-  min-width: 80%;
-  padding: 1vh 1vw 1vh 1vw;
-  overflow-x: auto;
-  margin-right: auto;
+  overflow-x: visible;
+  transform: scaleY(-1);
 }
 
 #ecosystem > * {
@@ -21,7 +27,6 @@
   flex-grow: 0;
   flex-shrink: 0;
   max-height: max-content;
-  border: 3px solid rgb(76, 90, 69);
   border-radius: 20px;
 }
 
@@ -36,7 +41,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: rgb(205, 247, 183);
+  background-color: var(--green);
   max-height: 45vh;
   min-height: 27vh;
 }
@@ -54,7 +59,6 @@
   overflow: hidden;
   margin-top: 5px;
   border-radius: 10px;
-  border: 2px solid rgb(76, 90, 69);
 }
 
 .organism *:focus {
@@ -69,6 +73,7 @@
 
 .nameBox:focus-within {
   border: 2px solid black;
+  z-index: 11;
 }
 
 .name {
@@ -138,6 +143,7 @@
 
 .foodItem:focus-within {
   border: 2px solid black;
+  z-index: 9999;
 }
 
 .foodItem:hover button,
@@ -179,7 +185,7 @@
   cursor: pointer;
   margin: 0 1rem 0.6rem 1rem;
   border-radius: 10px;
-  border: 2px solid rgb(76, 90, 69);
+  border: 0px hidden;
 }
 
 .plusFood {
@@ -227,7 +233,7 @@
   width: 15vw;
   cursor: pointer;
   padding: 1vh 0 0 0;
-  border: 3px solid rgb(76, 90, 69);
+  border: 0px hidden;
   border-radius: 20px;
 }
 
@@ -281,7 +287,7 @@
   font-size: 1.25rem;
   font-weight: bold;
   cursor: pointer;
-  border: 3px solid rgb(76, 90, 69);
+  border: 0px hidden;
   border-radius: 20px;
   margin-top: 2vh;
 }

@@ -38,10 +38,12 @@
     </template>
 
     <section id="organismRow">
-        <form id="ecosystem">
-            <datalist id = "consumableList">
-            </datalist>
-        </form>
+        <div id="ecosystemContainer">
+            <form id="ecosystem">
+                <datalist id = "consumableList">
+                </datalist>
+            </form>
+        </div>
         <div id="organismButtons">
             <button id="addOrganism" type="button" disabled>
                 <label>Add <br> Organism</label>
@@ -51,7 +53,21 @@
         </div>
     </section>
     <section id="foodChainRow">
-        <button type="button" id="displayFoodChains" disabled>Display Food Chains</button>
+        <div id="foodChainControllers">
+            <form id="filters">
+                <label for="maxLength">Maximum length of food chains:</label>
+                <input type="text" name="maxLength" id="maxLength">
+                <label for="maxLength">Minimum length of food chains:</label>
+                <input type="text" name="minLength" id="minLength">
+                <label for="maxLength">Food chains must start with:</label>
+                <input type="text" name="producer" id="producerFilter">
+                <label for="maxLength">Food chains must end with:</label>
+                <input type="text" name="apexPredator" id="apexFilter">
+                <label for="maxLength">Food chains must contain:</label>
+                <input type="text" name="contains" id="containsFilter">
+            </form>
+            <button type="button" id="displayFoodChains" disabled>Display Food Chains</button>
+        </div>
         <div id="foodChainContainer">
             <div id="foodChainDisplay">
 
