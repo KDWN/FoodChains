@@ -1,5 +1,6 @@
 import { ecosystem, validCharacters, uuidRegex, Organism } from "./global.js";
 
+// Converts a map into an object with a datatype signifing it is a map (used to send maps through JSON)
 function replacer(key, value) {
   if(value instanceof Map) {
     return {
@@ -11,6 +12,7 @@ function replacer(key, value) {
   }
 }
 
+// Converts an object into a map this only triggers if it has a datatype signifing that it is a map (used to recieve maps from JSON)
 function reviver(key, value) {
   if (value && typeof value === 'object' && value.dataType === 'Map') {
     return new Map(Object.entries(value.map));
@@ -18,6 +20,7 @@ function reviver(key, value) {
   return value;
 }
 
+// Tells the backend to request the inofrmation from the database 
 function checkDB() {
     return fetch('http://localhost:3000/ecosystems/callEcosystem', {
         method: 'GET',
@@ -44,6 +47,7 @@ function checkDB() {
     });
 }
 
+// Tells the backend to communicate with the database to add all new organisms to the ecosystem
 function saveEcosystem() {
     console.log(ecosystem)
     fetch('http://localhost:3000/ecosystems/saveEcosystem', {
@@ -79,12 +83,15 @@ async function displayEcosystem(data){
     }
 }
 
+// Creates an organism with information pre-added (used for when loading a page with prior database information)
 async function createOrganism(organismId, organismName, foodList) {
     await addOrganism(organismId)
+
     const thisEcosystem = document.querySelector("#ecosystem");
     const newOrganism = thisEcosystem.lastElementChild;
     const nameBox = newOrganism.children[0].children[0].children[0];
     const button = newOrganism.children[1];
+
     newOrganism.dataset.id = organismId;
     nameBox.value = organismName;
     for ( const foodId of foodList ) {
@@ -102,6 +109,7 @@ async function createOrganism(organismId, organismName, foodList) {
     consumableList.appendChild(organismSelector);
 }
 
+// Creates a blank organism
 function addOrganism(uuid) {
     console.log("addOrganism pressed")
     let organismId
@@ -136,9 +144,11 @@ function addOrganism(uuid) {
     consumableList.appendChild(organismSelector);
 }
 
+// Verifies the unqinueness of the organism and adds it to the dropdown menu
 function updateDropdown(uuid, nameInput, organismName) {
     const consumableList = document.querySelector("#consumableList");
     const consumableOption = consumableList.querySelector(`[data-id="${uuid}"]`);
+
     if ( organismName === null ) {
         consumableOption.remove();
         document.querySelectorAll(`input[data-id="${uuid}"]`).forEach((timeEaten) => {
@@ -173,9 +183,9 @@ function addConsumable(button, uuid) {
     const thisOrganism = button.parentNode.children[0];
     thisOrganism.appendChild(cloneFood);
     const newFood = thisOrganism.lastElementChild;
+
     newFood.children[0].focus();
     newFood.children[0].select();
-
 
     newFood.children[0].addEventListener("change", validateConsumable);
     newFood.lastElementChild.addEventListener("click", removeConsumable);
@@ -188,6 +198,7 @@ function addConsumable(button, uuid) {
     }
 }
 
+// Checks if the consumable exists as an organism is in the ecosystem
 function validateConsumable() {
     const existingOrganisms = []
     for ( const organism of ecosystem.values()) {
@@ -202,10 +213,15 @@ function validateConsumable() {
         this.value = '';
         return;
     }
+
+    // Checks if the organism exists but with different casing
     const organism = ecosystem.values().find(
-    o => o.name.toLowerCase() === this.value.toLowerCase()
+        o => o.name.toLowerCase() === this.value.toLowerCase()
     );
+
+    // Makes the casing correct
     this.value = organism.name
+
     this.dataset.id = organism.id;
     const thisOrganism = this.closest(".organBox")
     const consumerId = thisOrganism.dataset.id
@@ -222,9 +238,12 @@ function removeOrganism() {
     const jsOrganism = ecosystem.get(organismId);
     const foodList = jsOrganism["foodList"];
     const nameinput = this.parentNode.children[0];
+
     updateDropdown(organismId, nameinput, null);
     ecosystem.delete(organismId);
     thisOrganism.remove();
+    
+    // Tells the backend to communicate with the database that it should delete thisOrganism
     fetch('http://localhost:3000/organisms/removeOrganism', {
         method: 'POST',
         headers: {
@@ -254,12 +273,15 @@ function removeConsumable() {
     const thisOrganism = this.closest(".organBox")
     const organismId = thisOrganism.dataset.id
     const organism = this.closest(".organism")
+
     ecosystem.get(organismId).removeFood(thisId)
     thisFood.remove();
     if(isOverflowing(organism) === false) {
         organism.style.paddingRight = "1.5rem";
     }
     if(!thisId) { return }
+
+    // Tells the backend to communicate with the database that it should detach a consumable from thisOrganism
     fetch('http://localhost:3000/food/removeFood', {
         method: 'POST',
         headers: {
@@ -282,6 +304,7 @@ function removeConsumable() {
     });
 }
 
+// Sets up the ability for users to interact with the page
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("page loaded");
     document.querySelector("#ecosystem").addEventListener("submit", (e) => {

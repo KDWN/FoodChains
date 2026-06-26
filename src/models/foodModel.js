@@ -1,6 +1,7 @@
 import neo4j from 'neo4j-driver'
 import { driver } from "../config/db.js"
 
+// Deletes organisms from the database that are irrelevant due to having no connections in the ecosystem
 export const checkFoodConnections = async (foodList) => {
     console.log(foodList)
     const removedFood = []

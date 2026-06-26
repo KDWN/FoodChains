@@ -25,6 +25,7 @@ class Organism {
     }
 }
 
+// Sends the information of the ecosystem map to the database
 export const createEcosystem = async (ecosystem) => {
     const session = driver.session()
     try {
@@ -41,7 +42,7 @@ export const createEcosystem = async (ecosystem) => {
             )
             for (const food of foodList) {
                 await tx.run(`
-                    Match(o:Organism {id: $organismId})
+                    MATCH(o:Organism {id: $organismId})
                     MERGE(f:Organism {id: $food})
                     MERGE(o)-[:EATS]->(f)
                 `,
@@ -56,6 +57,7 @@ export const createEcosystem = async (ecosystem) => {
     }
 }
 
+// Converts the database information into a map
 export const checkEcosystem = async () => {
     let result = []
     const session = driver.session()

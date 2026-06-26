@@ -15,6 +15,7 @@ function setParameters() {
     return [maxChainLength, minChainLength, requiredProducer, requiredApex, mustContain]
 }
 
+// Checks if the organism input into in the organism based filters is in the ecosystem
 function validateOrganismFilter() {
     const existingOrganisms = []
     for ( const organism of ecosystem.values()) {
@@ -29,13 +30,13 @@ function validateOrganismFilter() {
         this.value = '';
         return;
     }
+    
+    // Checks if the organism exists but with different casing
     const organism = ecosystem.values().find(
         o => o.name.toLowerCase() === this.value.toLowerCase()
     );
+    // Makes the casing correct
     this.value = organism.name;
-}
-
-function validateNumberFilter() {
 }
 
 // sections off the organisms into producers and consumers for simpler calculations (only producers can start a foodchain (producers all produce energy without eating another create))
@@ -62,6 +63,7 @@ function organiseOrganism() {
     return [producers, consumers]
 }
 
+// Top level controls for the generation of food chains
 function findFoodChains() {
     const [producers, consumers] = organiseOrganism();
     console.log(producers)
@@ -79,6 +81,7 @@ function findFoodChains() {
     console.log(foodChains);
 }
 
+// Main controls for the generation of food chains
 function createChain(consumers, currentOrganism, chain, links) {
     const nextConsumers = findConsumers(currentOrganism, consumers);
     // adds the food chain to the list if it has reached the top due to maxLength or apex predator
@@ -143,29 +146,36 @@ function findConsumers(food, consumers) {
     return canEat;
 }
 
+// Converts the food chains to html
 function displayFoodChains() {
     setParameters()
     findFoodChains()
     const foodChainContainer = document.querySelector("#foodChainContainer");
     const foodChainDisplay = foodChainContainer.children[0];
     foodChainDisplay.replaceChildren();
+
     for (const thisChain of foodChains) {
         const newFoodChain = document.createElement("p")
+
         for ( let position = 0; position < thisChain.length; position++ ) {
             newFoodChain.append(thisChain[position]);
+
             if (thisChain[position + 1] === "Cannibalism" || thisChain[position + 1] === "Reciprocal predation loop") {
                 newFoodChain.append(' ⟳ ');
                 continue
             }
+
             if (thisChain[position + 1]) {
                 newFoodChain.append(' → ');
             }
         }
         foodChainDisplay.appendChild(newFoodChain);
     }
+
     foodChainContainer.style.visibility = "visible";
 }
 
+// Sets up the ability for users to interact with the page
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".organismFilter").forEach(filter => {
         filter.addEventListener("change", validateOrganismFilter);
