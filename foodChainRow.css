@@ -10,6 +10,7 @@
     flex-direction: column;
     justify-content: space-between;
     width: calc(20% - 3vw);
+    gap: 1vh;
     margin: 0 0 1vh 0.5vw;
     height: 38vh;
     background-color: var(--gray);
@@ -21,18 +22,22 @@
 #filters {
     display: flex;
     flex-direction: column;
+    width: 80%;
+    margin: auto;
 }
 
 #filters label {
     text-align: center;
     font-weight: 600;
-    font-size: 1.4rem;
+    font-size: 1rem;
     margin-top: 0.7rem;
 }
 
 #filters input {
     border: 2px solid black;
     border-radius: 5px;
+    font-weight: 600;
+    font-size: 1.3rem;
 }
 
 #displayFoodChains {

@@ -69,6 +69,7 @@
   position: relative;
   display: flex;
   min-height: fit-content;
+  margin: 0;
 }
 
 .nameBox:focus-within {

@@ -55,18 +55,18 @@
     <section id="foodChainRow">
         <div id="foodChainControllers">
             <form id="filters">
-                <label for="maxLength">Maximum length of food chains:</label>
-                <input type="text" name="maxLength" id="maxLength">
-                <label for="maxLength">Minimum length of food chains:</label>
-                <input type="text" name="minLength" id="minLength">
-                <label for="maxLength">Food chains must start with:</label>
-                <input type="text" name="producer" id="producerFilter">
-                <label for="maxLength">Food chains must end with:</label>
-                <input type="text" name="apexPredator" id="apexFilter">
-                <label for="maxLength">Food chains must contain:</label>
-                <input type="text" name="contains" id="containsFilter">
+                <label for="maxLength">Maximum length:</label>
+                <input type="number" name="maxLength" id="maxLength" class="numberFilter">
+                <label for="minLength">Minimum length:</label>
+                <input type="number" name="minLength" id="minLength" class="numberFilter">
+                <label for="producer">Food chains must start with:</label>
+                <input type="text" name="producer" id="producer" class="organismFilter" list="consumableList">
+                <label for="apex">Food chains must end with:</label>
+                <input type="text" name="apex" id="apex" class="organismFilter" list="consumableList">
+                <label for="contains">Food chains must contain:</label>
+                <input type="text" name="contains" id="contains" class="organismFilter" list="consumableList">
             </form>
-            <button type="button" id="displayFoodChains" disabled>Display Food Chains</button>
+            <button type="submit" form="filters" id="displayFoodChains" disabled>Display Food Chains</button>
         </div>
         <div id="foodChainContainer">
             <div id="foodChainDisplay">
